@@ -86,7 +86,7 @@ final class AppController: ObservableObject {
         switch settings.menuBarProvider {
         case .codex: "sparkles"
         case .antigravity where settings.antigravityModelID == "claude": "brain.head.profile"
-        case .antigravity: "star.fill"
+        case .antigravity: "bolt.fill"
         }
     }
 
