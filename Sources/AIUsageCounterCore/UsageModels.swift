@@ -1,5 +1,39 @@
 import Foundation
 
+public enum UsageProviderID: String, Codable, CaseIterable, Identifiable, Sendable {
+    case codex
+    case antigravity
+
+    public var id: String { rawValue }
+    public var displayName: String { self == .codex ? "Codex" : "Antigravity" }
+}
+
+public struct UsageQuota: Codable, Equatable, Identifiable, Sendable {
+    public let id: String
+    public let name: String
+    public let remainingPercent: Int
+    public let resetsAt: Date?
+
+    public init(id: String, name: String, remainingPercent: Int, resetsAt: Date?) {
+        self.id = id
+        self.name = name
+        self.remainingPercent = min(100, max(0, remainingPercent))
+        self.resetsAt = resetsAt
+    }
+}
+
+public struct ProviderSnapshot: Codable, Equatable, Sendable {
+    public let providerID: UsageProviderID
+    public let quotas: [UsageQuota]
+    public let fetchedAt: Date
+
+    public init(providerID: UsageProviderID, quotas: [UsageQuota], fetchedAt: Date) {
+        self.providerID = providerID
+        self.quotas = quotas
+        self.fetchedAt = fetchedAt
+    }
+}
+
 public struct QuotaWindow: Codable, Equatable, Sendable {
     public let remainingPercent: Int
     public let resetsAt: Date?
