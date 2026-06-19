@@ -13,7 +13,8 @@ let package = Package(
         .target(name: "AIUsageCounterCore"),
         .executableTarget(
             name: "AIUsageCounterApp",
-            dependencies: ["AIUsageCounterCore"]
+            dependencies: ["AIUsageCounterCore"],
+            resources: [.process("Resources")]
         ),
         .testTarget(
             name: "AIUsageCounterCoreTests",

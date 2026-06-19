@@ -5,6 +5,13 @@ import SwiftUI
 final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApplication.shared.setActivationPolicy(.accessory)
+        
+        if let bundlePath = Bundle.module.path(forResource: "AppIcon", ofType: "png"),
+           let image = NSImage(contentsOfFile: bundlePath) {
+            NSApplication.shared.applicationIconImage = image
+        } else if let image = NSImage(named: "AppIcon") {
+            NSApplication.shared.applicationIconImage = image
+        }
     }
 }
 

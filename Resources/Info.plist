@@ -8,6 +8,8 @@
     <string>AI Usage Counter</string>
     <key>CFBundleExecutable</key>
     <string>ai-usage-counter</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>CFBundleIdentifier</key>
     <string>local.sumetph.ai-usage-counter</string>
     <key>CFBundleInfoDictionaryVersion</key>
