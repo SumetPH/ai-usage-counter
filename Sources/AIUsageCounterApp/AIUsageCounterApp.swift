@@ -60,9 +60,10 @@ private struct UsagePopover: View {
                     ContentUnavailableView(
                         "No Providers Enabled",
                         systemImage: "gauge.with.dots.needle.0percent",
-                        description: Text("Enable a provider in Settings.")
+                        description: Text("Enable a provider in Settings."),
+
                     )
-                    .frame(minHeight: 150)
+                    .frame(minHeight: 160)
                 } else {
                     ForEach(controller.enabledProviders) { provider in
                         ProviderSection(monitor: controller.monitor(for: provider), isMenuBarProvider: settings.menuBarProvider == provider)

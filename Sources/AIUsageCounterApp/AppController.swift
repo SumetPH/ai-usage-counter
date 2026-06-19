@@ -27,7 +27,7 @@ final class AppController: ObservableObject {
         let antigravityProvider = AntigravityProvider()
         self.settings = settings
         self.antigravityProvider = antigravityProvider
-        self.antigravityConnected = antigravityProvider.isConnected()
+        self.antigravityConnected = settings.enabledProviders.contains(.antigravity) ? antigravityProvider.isConnected() : false
         self.codexMonitor = ProviderUsageMonitor(
             provider: CodexProviderAdapter(),
             cache: UserDefaultsProviderUsageCache(providerID: .codex, defaults: defaults)
@@ -99,6 +99,9 @@ final class AppController: ObservableObject {
     func setProviderEnabled(_ enabled: Bool, provider: UsageProviderID) {
         guard settings.setEnabled(enabled, for: provider) else { return }
         monitor(for: provider).setEnabled(enabled)
+        if provider == .antigravity {
+            antigravityConnected = enabled ? antigravityProvider.isConnected() : false
+        }
     }
 
     func setPopupOpen(_ open: Bool) {

@@ -16,8 +16,8 @@ public final class ProviderSettings: ObservableObject {
 
     public init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        let stored = defaults.stringArray(forKey: Key.enabled)?.compactMap(UsageProviderID.init(rawValue:)) ?? []
-        let enabled: Set<UsageProviderID> = stored.isEmpty ? [.codex, .antigravity] : Set(stored)
+        let stored = defaults.stringArray(forKey: Key.enabled)?.compactMap(UsageProviderID.init(rawValue:))
+        let enabled: Set<UsageProviderID> = Set(stored ?? [])
         enabledProviders = enabled
         let preferred = defaults.string(forKey: Key.menu).flatMap(UsageProviderID.init(rawValue:)) ?? .codex
         menuBarProvider = enabled.contains(preferred) ? preferred : enabled.sorted(by: Self.providerOrder).first ?? .codex
@@ -29,7 +29,6 @@ public final class ProviderSettings: ObservableObject {
         if enabled {
             enabledProviders.insert(provider)
         } else {
-            guard enabledProviders.count > 1 else { return false }
             enabledProviders.remove(provider)
             if menuBarProvider == provider {
                 menuBarProvider = enabledProviders.sorted(by: Self.providerOrder).first ?? .codex
