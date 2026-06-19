@@ -33,7 +33,7 @@ private struct MenuBarUsageLabel: View {
     private var renderedImage: Image {
         let content = HStack(spacing: 4) {
             Image(systemName: controller.menuBarIconName)
-                .font(.system(size: 15, weight: .semibold))
+                .font(.system(size: 14, weight: .semibold))
             Text(controller.menuBarText).font(.system(size: 13, weight: .medium, design: .rounded)).monospacedDigit()
         }.foregroundColor(.black)
         let renderer = ImageRenderer(content: content)
@@ -65,7 +65,12 @@ private struct UsagePopover: View {
                     .frame(minHeight: 150)
                 } else {
                     ForEach(controller.enabledProviders) { provider in
-                        ProviderSection(monitor: controller.monitor(for: provider))
+                        ProviderSection(monitor: controller.monitor(for: provider), isMenuBarProvider: settings.menuBarProvider == provider)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                settings.setMenuBarProvider(provider)
+                            }
+                            .help("Click to show \(provider.displayName) in Menu Bar")
                         if provider != controller.enabledProviders.last { Divider() }
                     }
                 }
@@ -139,12 +144,21 @@ private struct UsagePopover: View {
 
 private struct ProviderSection: View {
     @ObservedObject var monitor: ProviderUsageMonitor
+    var isMenuBarProvider: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .firstTextBaseline) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(monitor.id.displayName).font(.headline)
+                    HStack(spacing: 4) {
+                        Text(monitor.id.displayName).font(.headline)
+                        if isMenuBarProvider {
+                            Image(systemName: "menubar.rectangle")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .help("Currently shown in Menu Bar")
+                        }
+                    }
                     Text(monitor.lastUpdatedText).font(.caption2).foregroundStyle(monitor.isStale ? .orange : .secondary)
                 }
                 Spacer()
