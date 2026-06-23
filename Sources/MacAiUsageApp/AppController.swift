@@ -188,7 +188,7 @@ private final class OAuthLoopbackServer: @unchecked Sendable {
     }
 
     private let expectedState: String
-    private let queue = DispatchQueue(label: "mac-ai-usage.oauth")
+    private let queue = DispatchQueue(label: "dev.sumetph.MacAiUsage.oauth")
     private var listener: NWListener?
 
     private init(expectedState: String) { self.expectedState = expectedState }
@@ -264,7 +264,7 @@ private final class OAuthCompletion: @unchecked Sendable {
 private final class ConnectivityObserver: @unchecked Sendable {
     var onRestored: (@Sendable () -> Void)?
     private let monitor = NWPathMonitor()
-    private let queue = DispatchQueue(label: "mac-ai-usage.network")
+    private let queue = DispatchQueue(label: "dev.sumetph.MacAiUsage.network")
     private let lock = NSLock()
     private var wasSatisfied: Bool?
 

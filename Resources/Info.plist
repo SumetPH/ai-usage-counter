@@ -7,11 +7,11 @@
     <key>CFBundleDisplayName</key>
     <string>Mac Ai Usage</string>
     <key>CFBundleExecutable</key>
-    <string>mac-ai-usage</string>
+    <string>MacAiUsage</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
     <key>CFBundleIdentifier</key>
-    <string>local.sumetph.mac-ai-usage</string>
+    <string>dev.sumetph.MacAiUsage</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>

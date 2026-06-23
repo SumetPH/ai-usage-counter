@@ -1,36 +1,96 @@
 #!/usr/bin/env bash
+
 set -euo pipefail
 
-ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-APP_NAME="Mac Ai Usage"
-APP="$ROOT/dist/$APP_NAME.app"
+configuration="${1:-release}"
+case "$configuration" in
+  debug|release) ;;
+  *)
+    echo "Usage: $0 [debug|release]" >&2
+    exit 64
+    ;;
+esac
 
-swift build --package-path "$ROOT" -c release --product mac-ai-usage
-BIN_DIR="$(swift build --package-path "$ROOT" -c release --show-bin-path)"
+project_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+product_name="Mac Ai Usage"
+executable_name="MacAiUsage"
+app_dir="$project_root/dist/$product_name.app"
+contents_dir="$app_dir/Contents"
+icon_source="$project_root/Sources/MacAiUsageApp/Resources/AppIcon.png"
+iconset_dir="$project_root/.build/app/AppIcon.iconset"
 
-rm -rf "$APP"
-mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp "$BIN_DIR/mac-ai-usage" "$APP/Contents/MacOS/mac-ai-usage"
-cp "$ROOT/Resources/Info.plist" "$APP/Contents/Info.plist"
+cd "$project_root"
+# Swift module caches contain absolute paths and become invalid if the project
+# directory is renamed or moved. App bundles should always use a clean build.
+swift package clean
+swift build --configuration "$configuration" --product "$executable_name"
+bin_dir="$(swift build --configuration "$configuration" --show-bin-path)"
 
-if [ -f "$ROOT/Sources/MacAiUsageApp/Resources/AppIcon.png" ]; then
-    ICONSET_DIR="$APP/Contents/Resources/AppIcon.iconset"
-    mkdir -p "$ICONSET_DIR"
-    sips -s format png -z 16 16     "$ROOT/Sources/MacAiUsageApp/Resources/AppIcon.png" --out "$ICONSET_DIR/icon_16x16.png" >/dev/null
-    sips -s format png -z 32 32     "$ROOT/Sources/MacAiUsageApp/Resources/AppIcon.png" --out "$ICONSET_DIR/icon_16x16@2x.png" >/dev/null
-    sips -s format png -z 32 32     "$ROOT/Sources/MacAiUsageApp/Resources/AppIcon.png" --out "$ICONSET_DIR/icon_32x32.png" >/dev/null
-    sips -s format png -z 64 64     "$ROOT/Sources/MacAiUsageApp/Resources/AppIcon.png" --out "$ICONSET_DIR/icon_32x32@2x.png" >/dev/null
-    sips -s format png -z 128 128   "$ROOT/Sources/MacAiUsageApp/Resources/AppIcon.png" --out "$ICONSET_DIR/icon_128x128.png" >/dev/null
-    sips -s format png -z 256 256   "$ROOT/Sources/MacAiUsageApp/Resources/AppIcon.png" --out "$ICONSET_DIR/icon_128x128@2x.png" >/dev/null
-    sips -s format png -z 256 256   "$ROOT/Sources/MacAiUsageApp/Resources/AppIcon.png" --out "$ICONSET_DIR/icon_256x256.png" >/dev/null
-    sips -s format png -z 512 512   "$ROOT/Sources/MacAiUsageApp/Resources/AppIcon.png" --out "$ICONSET_DIR/icon_256x256@2x.png" >/dev/null
-    sips -s format png -z 512 512   "$ROOT/Sources/MacAiUsageApp/Resources/AppIcon.png" --out "$ICONSET_DIR/icon_512x512.png" >/dev/null
-    sips -s format png -z 1024 1024 "$ROOT/Sources/MacAiUsageApp/Resources/AppIcon.png" --out "$ICONSET_DIR/icon_512x512@2x.png" >/dev/null
-    
-    iconutil -c icns "$ICONSET_DIR" -o "$APP/Contents/Resources/AppIcon.icns"
-    rm -rf "$ICONSET_DIR"
-fi
-printf 'APPL????' > "$APP/Contents/PkgInfo"
-codesign --force --deep --sign - "$APP"
+rm -rf "$app_dir" "$iconset_dir"
+mkdir -p "$contents_dir/MacOS" "$contents_dir/Resources" "$iconset_dir"
+cp "$bin_dir/$executable_name" "$contents_dir/MacOS/$executable_name"
 
-echo "$APP"
+create_icon() {
+  local size="$1"
+  local filename="$2"
+  sips -s format png -z "$size" "$size" "$icon_source" --out "$iconset_dir/$filename" >/dev/null
+}
+
+create_icon 16 icon_16x16.png
+create_icon 32 icon_16x16@2x.png
+create_icon 32 icon_32x32.png
+create_icon 64 icon_32x32@2x.png
+create_icon 128 icon_128x128.png
+create_icon 256 icon_128x128@2x.png
+create_icon 256 icon_256x256.png
+create_icon 512 icon_256x256@2x.png
+create_icon 512 icon_512x512.png
+create_icon 1024 icon_512x512@2x.png
+iconutil --convert icns "$iconset_dir" --output "$contents_dir/Resources/AppIcon.icns"
+rm -rf "$iconset_dir"
+
+cat > "$contents_dir/Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "https://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleDevelopmentRegion</key>
+  <string>en</string>
+  <key>CFBundleExecutable</key>
+  <string>MacAiUsage</string>
+  <key>CFBundleIdentifier</key>
+  <string>dev.sumetph.MacAiUsage</string>
+  <key>CFBundleIconFile</key>
+  <string>AppIcon.icns</string>
+  <key>CFBundleDisplayName</key>
+  <string>Mac Ai Usage</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundleName</key>
+  <string>MacAiUsage</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>1.0.0</string>
+  <key>CFBundleVersion</key>
+  <string>1</string>
+  <key>LSMinimumSystemVersion</key>
+  <string>14.0</string>
+  <key>LSUIElement</key>
+  <true/>
+  <key>NSHighResolutionCapable</key>
+  <true/>
+  <key>NSPrincipalClass</key>
+  <string>NSApplication</string>
+</dict>
+</plist>
+PLIST
+
+plutil -lint "$contents_dir/Info.plist" >/dev/null
+
+# Sign with Apple Development cert by default so Accessibility permission persists across builds.
+# The cert identity is stable, so macOS won't revoke the permission after each rebuild.
+# Override with CODE_SIGN_IDENTITY env var if needed (e.g. "-" for ad-hoc).
+codesign --force --sign "${CODE_SIGN_IDENTITY:-Apple Development}" "$app_dir"
+
+echo "Built: $app_dir"
