@@ -1,5 +1,5 @@
 import XCTest
-@testable import AIUsageCounterCore
+@testable import MacAiUsageCore
 
 final class UsageCacheTests: XCTestCase {
     func testRoundTripsOnlyNormalizedSnapshot() throws {

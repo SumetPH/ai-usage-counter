@@ -1,4 +1,4 @@
-# AI Usage Counter
+# Mac Ai Usage
 
 An elegant, lightweight macOS menu bar utility to monitor rate limits and quotas for Codex CLI and Google Antigravity (Google Cloud Code Assist).
 
@@ -29,15 +29,15 @@ Built with SwiftUI and Swift 6, this tool resides in your menu bar to keep you i
 
 The project is structured as a Swift Package with two primary targets:
 
-### Core Logic Target: `AIUsageCounterCore`
-- [**AntigravityProvider.swift**](Sources/AIUsageCounterCore/AntigravityProvider.swift): Manages Google OAuth PKCE authentication flow, access token refresh, and Google Cloud Code Assist endpoint queries.
-- [**CodexAppServerProvider.swift**](Sources/AIUsageCounterCore/CodexAppServerProvider.swift): Connects to the local `codex app-server` over stdio channels to stream and poll Codex rate limit windows.
-- [**UsageMonitor.swift**](Sources/AIUsageCounterCore/UsageMonitor.swift) / [**ProviderUsageMonitor.swift**](Sources/AIUsageCounterCore/ProviderUsageMonitor.swift): State controllers that govern refresh intervals, connection state machine, cache loading/saving, and countdown ticks.
-- [**UsageModels.swift**](Sources/AIUsageCounterCore/UsageModels.swift): Data types representing quotas, snapshots, and connection states.
+### Core Logic Target: `MacAiUsageCore`
+- [**AntigravityProvider.swift**](Sources/MacAiUsageCore/AntigravityProvider.swift): Manages Google OAuth PKCE authentication flow, access token refresh, and Google Cloud Code Assist endpoint queries.
+- [**CodexAppServerProvider.swift**](Sources/MacAiUsageCore/CodexAppServerProvider.swift): Connects to the local `codex app-server` over stdio channels to stream and poll Codex rate limit windows.
+- [**UsageMonitor.swift**](Sources/MacAiUsageCore/UsageMonitor.swift) / [**ProviderUsageMonitor.swift**](Sources/MacAiUsageCore/ProviderUsageMonitor.swift): State controllers that govern refresh intervals, connection state machine, cache loading/saving, and countdown ticks.
+- [**UsageModels.swift**](Sources/MacAiUsageCore/UsageModels.swift): Data types representing quotas, snapshots, and connection states.
 
-### Application Target: `AIUsageCounterApp`
-- [**AIUsageCounterApp.swift**](Sources/AIUsageCounterApp/AIUsageCounterApp.swift): Declares the `@main` app entry point, configures the menu bar label image renderer, and sets up the SwiftUI popover view hierarchy.
-- [**AppController.swift**](Sources/AIUsageCounterApp/AppController.swift): Bridges UI interactions with the core monitors, manages the OAuth local loopback server, and handles macOS startup settings.
+### Application Target: `MacAiUsageApp`
+- [**MacAiUsageApp.swift**](Sources/MacAiUsageApp/MacAiUsageApp.swift): Declares the `@main` app entry point, configures the menu bar label image renderer, and sets up the SwiftUI popover view hierarchy.
+- [**AppController.swift**](Sources/MacAiUsageApp/AppController.swift): Bridges UI interactions with the core monitors, manages the OAuth local loopback server, and handles macOS startup settings.
 
 ---
 
@@ -58,7 +58,7 @@ bash Scripts/build-app.sh
 ```
 
 The compiled application bundle will be created at:
-`dist/AI Usage Counter.app`
+`dist/Mac Ai Usage.app`
 
 This bundle is ad-hoc signed for local use on your Mac.
 
@@ -78,12 +78,12 @@ Live integration tests are opt-in and require appropriate setup/credentials:
 
 - **Codex Live Integration**: Validates window responses:
   ```bash
-  env AI_USAGE_COUNTER_LIVE_TEST=1 swift test --filter LiveCodexIntegrationTests
+  env MAC_AI_USAGE_LIVE_TEST=1 swift test --filter LiveCodexIntegrationTests
   ```
 
 - **Antigravity Live Integration**: Verifies that Google returns model quotas using credentials stored in macOS Keychain:
   ```bash
-  env AI_USAGE_COUNTER_ANTIGRAVITY_LIVE_TEST=1 swift test --filter LiveAntigravityIntegrationTests
+  env MAC_AI_USAGE_ANTIGRAVITY_LIVE_TEST=1 swift test --filter LiveAntigravityIntegrationTests
   ```
 
 ---

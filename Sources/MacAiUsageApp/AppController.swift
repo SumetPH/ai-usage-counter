@@ -1,4 +1,4 @@
-import AIUsageCounterCore
+import MacAiUsageCore
 import AppKit
 import Combine
 import Foundation
@@ -188,7 +188,7 @@ private final class OAuthLoopbackServer: @unchecked Sendable {
     }
 
     private let expectedState: String
-    private let queue = DispatchQueue(label: "ai-usage-counter.oauth")
+    private let queue = DispatchQueue(label: "mac-ai-usage.oauth")
     private var listener: NWListener?
 
     private init(expectedState: String) { self.expectedState = expectedState }
@@ -219,7 +219,7 @@ private final class OAuthLoopbackServer: @unchecked Sendable {
                         }
                         let parameters = Dictionary(uniqueKeysWithValues: (components.queryItems ?? []).compactMap { item in item.value.map { (item.name, $0) } })
                         let ok = parameters["state"] == self.expectedState && parameters["code"] != nil
-                        let message = ok ? "Authentication complete. You can close this window." : "Authentication failed. Return to AI Usage Counter."
+                        let message = ok ? "Authentication complete. You can close this window." : "Authentication failed. Return to Mac Ai Usage."
                         let response = "HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: \(message.utf8.count)\r\nConnection: close\r\n\r\n\(message)"
                         connection.send(content: Data(response.utf8), completion: .contentProcessed { _ in connection.cancel() })
                         if let code = parameters["code"], parameters["state"] == self.expectedState {
@@ -264,7 +264,7 @@ private final class OAuthCompletion: @unchecked Sendable {
 private final class ConnectivityObserver: @unchecked Sendable {
     var onRestored: (@Sendable () -> Void)?
     private let monitor = NWPathMonitor()
-    private let queue = DispatchQueue(label: "ai-usage-counter.network")
+    private let queue = DispatchQueue(label: "mac-ai-usage.network")
     private let lock = NSLock()
     private var wasSatisfied: Bool?
 

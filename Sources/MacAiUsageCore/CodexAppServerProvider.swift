@@ -71,8 +71,8 @@ public actor CodexAppServerProvider: UsageProviding {
                 method: "initialize",
                 params: [
                     "clientInfo": [
-                        "name": "ai_usage_counter",
-                        "title": "AI Usage Counter",
+                        "name": "mac_ai_usage",
+                        "title": "Mac Ai Usage",
                         "version": "1.0.0",
                     ],
                 ],

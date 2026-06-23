@@ -19,7 +19,7 @@ public protocol AntigravityCredentialStoring: Sendable {
 }
 
 public final class KeychainAntigravityCredentialStore: AntigravityCredentialStoring, @unchecked Sendable {
-    private let service = "com.local.ai-usage-counter.antigravity"
+    private let service = "com.local.mac-ai-usage.antigravity"
     private let account = "google-oauth"
 
     public init() {}

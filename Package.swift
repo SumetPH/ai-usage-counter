@@ -3,22 +3,22 @@
 import PackageDescription
 
 let package = Package(
-    name: "AIUsageCounter",
+    name: "MacAiUsage",
     platforms: [.macOS(.v14)],
     products: [
-        .library(name: "AIUsageCounterCore", targets: ["AIUsageCounterCore"]),
-        .executable(name: "ai-usage-counter", targets: ["AIUsageCounterApp"]),
+        .library(name: "MacAiUsageCore", targets: ["MacAiUsageCore"]),
+        .executable(name: "MacAiUsage", targets: ["MacAiUsageApp"]),
     ],
     targets: [
-        .target(name: "AIUsageCounterCore"),
+        .target(name: "MacAiUsageCore"),
         .executableTarget(
-            name: "AIUsageCounterApp",
-            dependencies: ["AIUsageCounterCore"],
+            name: "MacAiUsageApp",
+            dependencies: ["MacAiUsageCore"],
             resources: [.process("Resources")]
         ),
         .testTarget(
-            name: "AIUsageCounterCoreTests",
-            dependencies: ["AIUsageCounterCore"]
+            name: "MacAiUsageCoreTests",
+            dependencies: ["MacAiUsageCore"]
         ),
     ],
     swiftLanguageModes: [.v5]

@@ -1,10 +1,10 @@
 import XCTest
-@testable import AIUsageCounterCore
+@testable import MacAiUsageCore
 
 final class LiveCodexIntegrationTests: XCTestCase {
     func testLiveCodexReturnsTwoNormalizedWindowsWhenOptedIn() async throws {
-        guard ProcessInfo.processInfo.environment["AI_USAGE_COUNTER_LIVE_TEST"] == "1" else {
-            throw XCTSkip("Set AI_USAGE_COUNTER_LIVE_TEST=1 to query the locally authenticated Codex session.")
+        guard ProcessInfo.processInfo.environment["MAC_AI_USAGE_LIVE_TEST"] == "1" else {
+            throw XCTSkip("Set MAC_AI_USAGE_LIVE_TEST=1 to query the locally authenticated Codex session.")
         }
 
         let provider = CodexAppServerProvider()

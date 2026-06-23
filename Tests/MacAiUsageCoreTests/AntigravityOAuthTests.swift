@@ -1,5 +1,5 @@
 import XCTest
-@testable import AIUsageCounterCore
+@testable import MacAiUsageCore
 
 final class AntigravityOAuthTests: XCTestCase {
     func testAuthorizationURLUsesPKCEAndOfflineConsent() throws {

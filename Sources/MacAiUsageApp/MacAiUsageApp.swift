@@ -1,4 +1,4 @@
-import AIUsageCounterCore
+import MacAiUsageCore
 import AppKit
 import SwiftUI
 
@@ -7,7 +7,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 @main
-struct AIUsageCounterApp: App {
+struct MacAiUsageApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var controller = AppController()
 

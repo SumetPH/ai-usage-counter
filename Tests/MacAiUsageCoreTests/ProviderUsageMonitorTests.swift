@@ -1,5 +1,5 @@
 import XCTest
-@testable import AIUsageCounterCore
+@testable import MacAiUsageCore
 
 @MainActor
 final class ProviderUsageMonitorTests: XCTestCase {

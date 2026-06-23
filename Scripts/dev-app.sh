@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-find Sources | entr -r swift run
+swift build && swift run MacAiUsage
